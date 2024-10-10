@@ -181,7 +181,7 @@ public class EventHandlerServer {
 			projectile.shoot(aim.x, aim.y, aim.z, (float)vel, 0.0f);
 
 			Vec3 shooterMotion = shooter.getDeltaMovement();
-			projectile.setDeltaMovement(projectile.getDeltaMovement().add(shooterMotion.x, shooter.isOnGround() ? 0.0 : shooterMotion.y, shooterMotion.z));
+			projectile.setDeltaMovement(projectile.getDeltaMovement().add(shooterMotion.x, shooter.onGround() ? 0.0 : shooterMotion.y, shooterMotion.z));
 
 			LogHelper.debug("Projectile direction: {}", aim);
 			LogHelper.debug("Projectile velocity: {}", vel);

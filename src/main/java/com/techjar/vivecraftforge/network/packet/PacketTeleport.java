@@ -1,12 +1,10 @@
 package com.techjar.vivecraftforge.network.packet;
 
-import java.util.function.Supplier;
-
 import com.techjar.vivecraftforge.Config;
 import com.techjar.vivecraftforge.network.IPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class PacketTeleport implements IPacket {
 	public float posX;
@@ -28,14 +26,14 @@ public class PacketTeleport implements IPacket {
 	}
 
 	@Override
-	public void handleClient(final Supplier<NetworkEvent.Context> context) {
+	public void handleClient(final CustomPayloadEvent.Context context) {
 	}
 
 	@Override
-	public void handleServer(final Supplier<NetworkEvent.Context> context) {
+	public void handleServer(final CustomPayloadEvent.Context context) {
 		if (Config.teleportEnabled.get()) {
-			ServerPlayer player = context.get().getSender();
-			context.get().enqueueWork(() -> player.moveTo(posX, posY, posZ, player.getYRot(), player.getXRot()));
+			ServerPlayer player = context.getSender();
+			context.enqueueWork(() -> player.moveTo(posX, posY, posZ, player.getYRot(), player.getXRot()));
 		}
 	}
 }

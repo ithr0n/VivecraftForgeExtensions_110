@@ -1,12 +1,11 @@
 package com.techjar.vivecraftforge.network.packet;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
-
 import com.techjar.vivecraftforge.network.IPacket;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PacketSettingOverride implements IPacket {
 	public Map<String, Object> settings = new HashMap<>();
@@ -34,10 +33,10 @@ public class PacketSettingOverride implements IPacket {
 	}
 
 	@Override
-	public void handleClient(final Supplier<NetworkEvent.Context> context) {
+	public void handleClient(final CustomPayloadEvent.Context context) {
 	}
 
 	@Override
-	public void handleServer(final Supplier<NetworkEvent.Context> context) {
+	public void handleServer(final CustomPayloadEvent.Context context) {
 	}
 }

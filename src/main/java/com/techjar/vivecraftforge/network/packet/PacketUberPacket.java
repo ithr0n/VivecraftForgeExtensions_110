@@ -2,10 +2,9 @@ package com.techjar.vivecraftforge.network.packet;
 
 import com.techjar.vivecraftforge.network.IPacket;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class PacketUberPacket implements IPacket {
 	public UUID uuid;
@@ -52,10 +51,10 @@ public class PacketUberPacket implements IPacket {
 	}
 
 	@Override
-	public void handleClient(final Supplier<NetworkEvent.Context> context) {
+	public void handleClient(final CustomPayloadEvent.Context context) {
 	}
 
 	@Override
-	public void handleServer(final Supplier<NetworkEvent.Context> context) {
+	public void handleServer(final CustomPayloadEvent.Context context) {
 	}
 }

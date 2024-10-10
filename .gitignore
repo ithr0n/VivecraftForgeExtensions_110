@@ -1,40 +1,25 @@
-#################
-## Eclipse
-#################
-
-*.pydevproject
-.project
+# eclipse
+bin
+*.launch
+.settings
 .metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
 .classpath
-.settings/
-.loadpath
+.project
 
-#################
-## ForgeGradle stuff
-#################
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
 build
 .gradle
+
+# other
 eclipse
 run
 
-# other project things
-libs
-/.apt_generated
-
-# IntelliJ
-out/
-.idea/
-generated/
-*.iml
-*.ipr
-*.iws
-
-# Misc
-.directory
+# Files from Forge MDK
+forge*changelog.txt

@@ -1,15 +1,14 @@
 package com.techjar.vivecraftforge.entity.ai.goal;
 
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
-
 import com.techjar.vivecraftforge.util.PlayerTracker;
 import com.techjar.vivecraftforge.util.Util;
-import com.techjar.vivecraftforge.util.VRPlayerData;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class VREndermanFindPlayerGoal extends EnderMan.EndermanLookForPlayerGoal {
 	private final TargetingConditions targetPredicate;
@@ -27,7 +26,7 @@ public class VREndermanFindPlayerGoal extends EnderMan.EndermanLookForPlayerGoal
 
 	@Override
 	public boolean canUse() {
-		this.pendingTarget = this.enderman.level.getNearestPlayer(this.targetPredicate, this.enderman);
+		this.pendingTarget = this.enderman.level().getNearestPlayer(this.targetPredicate, this.enderman);
 		return this.pendingTarget != null;
 	}
 

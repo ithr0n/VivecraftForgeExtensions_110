@@ -1,12 +1,8 @@
 package com.techjar.vivecraftforge.network.packet;
 
-import java.util.function.Supplier;
-
 import com.techjar.vivecraftforge.network.IPacket;
-import com.techjar.vivecraftforge.util.PlayerTracker;
-import com.techjar.vivecraftforge.util.VRPlayerData;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class PacketMoveMode implements IPacket {
 	public boolean freeMove;
@@ -29,11 +25,11 @@ public class PacketMoveMode implements IPacket {
 	}
 
 	@Override
-	public void handleClient(final Supplier<NetworkEvent.Context> context) {
+	public void handleClient(final CustomPayloadEvent.Context context) {
 	}
 
 	@Override
-	public void handleServer(final Supplier<NetworkEvent.Context> context) {
+	public void handleServer(final CustomPayloadEvent.Context context) {
 		/*ServerPlayerEntity player = context.get().getSender();
 		context.get().enqueueWork(() -> {
 			VRPlayerData data = PlayerTracker.getPlayerData(player, true);

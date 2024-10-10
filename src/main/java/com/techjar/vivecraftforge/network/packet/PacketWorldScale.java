@@ -1,13 +1,11 @@
 package com.techjar.vivecraftforge.network.packet;
 
-import java.util.function.Supplier;
-
 import com.techjar.vivecraftforge.network.IPacket;
 import com.techjar.vivecraftforge.util.PlayerTracker;
 import com.techjar.vivecraftforge.util.VRPlayerData;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class PacketWorldScale implements IPacket {
 	public float worldScale;
@@ -26,13 +24,13 @@ public class PacketWorldScale implements IPacket {
 	}
 
 	@Override
-	public void handleClient(final Supplier<NetworkEvent.Context> context) {
+	public void handleClient(final CustomPayloadEvent.Context context) {
 	}
 
 	@Override
-	public void handleServer(final Supplier<NetworkEvent.Context> context) {
-		ServerPlayer player = context.get().getSender();
-		context.get().enqueueWork(() -> {
+	public void handleServer(final CustomPayloadEvent.Context context) {
+		ServerPlayer player = context.getSender();
+		context.enqueueWork(() -> {
 			if (!PlayerTracker.hasPlayerData(player))
 				return;
 			VRPlayerData data = PlayerTracker.getPlayerData(player, true);

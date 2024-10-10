@@ -3,15 +3,11 @@ package com.techjar.vivecraftforge.network.packet;
 import com.techjar.vivecraftforge.Config;
 import com.techjar.vivecraftforge.network.IPacket;
 import com.techjar.vivecraftforge.util.BlockListMode;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.List;
-import java.util.function.Supplier;
 
 /*
  * For whatever reason this uses a serializer instead of just
@@ -43,12 +39,12 @@ public class PacketClimbing implements IPacket {
 	}
 
 	@Override
-	public void handleClient(final Supplier<NetworkEvent.Context> context) {
+	public void handleClient(final CustomPayloadEvent.Context context) {
 	}
 
 	@Override
-	public void handleServer(final Supplier<NetworkEvent.Context> context) {
-		ServerPlayer player = context.get().getSender();
+	public void handleServer(final CustomPayloadEvent.Context context) {
+		ServerPlayer player = context.getSender();
 		player.fallDistance = 0;
 		player.connection.aboveGroundTickCount = 0;
 	}

@@ -78,7 +78,7 @@ public class Config {
 		builder.comment("Climbey motion settings").push("climbey");
 		climbeyEnabled = builder.comment("Whether or not climbey is allowed on this server.").define("enabled", true);
 		blockListMode = builder.comment("Mode for block list.").defineEnum("blocklistmode", BlockListMode.DISABLED);
-		blockList = builder.comment("List of blocks to whitelist or blacklist").defineList("blocklist", Arrays.asList("white_wool", "dirt", "grass_block"), (s) -> s instanceof String && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation((String)s)));
+		blockList = builder.comment("List of blocks to whitelist or blacklist").defineList("blocklist", Arrays.asList("white_wool", "dirt", "grass_block"), (s) -> s instanceof String && ForgeRegistries.BLOCKS.containsKey(ResourceLocation.withDefaultNamespace((String)s)));
 		builder.pop(); // climbey
 
 		builder.comment("Roomscale crawling settings").push("crawling");

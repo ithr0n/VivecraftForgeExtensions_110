@@ -11,9 +11,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
@@ -74,11 +76,15 @@ public class Util {
 
 	public static boolean canEntityBeSeen(Entity entity, Vec3 playerEyePos) {
 		Vec3 entityEyePos = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
-		return entity.level.clip(new ClipContext(playerEyePos, entityEyePos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
+        try (Level level = entity.level()) {
+			return level.clip(new ClipContext(playerEyePos, entityEyePos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
+        } catch (IOException e) {
+			return false;
+		}
 	}
 
 	public static void replaceAIGoal(Mob entity, GoalSelector goalSelector, Class<? extends Goal> targetGoal, Supplier<Goal> newGoalSupplier) {
-		WrappedGoal goal = goalSelector.availableGoals.stream().filter((g) -> targetGoal.isInstance(g.getGoal())).findFirst().orElse(null);
+		WrappedGoal goal = goalSelector.getAvailableGoals().stream().filter((g) -> targetGoal.isInstance(g.getGoal())).findFirst().orElse(null);
 		if (goal != null) {
 			goalSelector.removeGoal(goal.getGoal());
 			goalSelector.addGoal(goal.getPriority(), newGoalSupplier.get());

@@ -1,5 +1,6 @@
 package com.techjar.vivecraftforge.network;
 
+import com.techjar.vivecraftforge.VivecraftForge;
 import com.techjar.vivecraftforge.util.LogHelper;
 
 import com.techjar.vivecraftforge.network.packet.*;
@@ -8,16 +9,19 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.SimpleChannel;
 
 public class ChannelHandler {
-	private static SimpleChannel CHANNEL;
+	private static final SimpleChannel CHANNEL = ChannelBuilder.named(
+			ResourceLocation.fromNamespaceAndPath("vivecraft", "data"))
+			.serverAcceptedVersions((status, version) -> true)
+			.clientAcceptedVersions((status, version) -> true)
+			.networkProtocolVersion(1)
+			.simpleChannel();
 
 	public static void init() {
-		CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation("vivecraft", "data"), () -> "lol", (s) -> true, (s) -> true);
-
 		addDiscriminator(0, new Message<>(PacketVersion.class));
 		addDiscriminator(1, new Message<>(PacketRequestData.class));
 		addDiscriminator(2, new Message<>(PacketHeadData.class));
@@ -38,38 +42,41 @@ public class ChannelHandler {
 	}
 
 	private static <T extends IPacket> void addDiscriminator(int d, Message<T> message) {
-		CHANNEL.registerMessage(d, message.getPacketClass(), message::encode, message::decode, message::handle);
+		CHANNEL.messageBuilder(message.getPacketClass(), d)
+				.encoder(message::encode)
+				.decoder(message::decode)
+				.consumerMainThread(message::handle);
 	}
 
 	public static void sendToAll(IPacket message) {
-		CHANNEL.send(PacketDistributor.ALL.noArg(), message);
+		CHANNEL.send(message, PacketDistributor.ALL.noArg());
 	}
 
 	public static void sendTo(IPacket message, ServerPlayer player) {
-		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+		CHANNEL.send(message, PacketDistributor.PLAYER.with(player));
 	}
 
 	public static void sendToAllAround(IPacket message, PacketDistributor.TargetPoint point) {
-		CHANNEL.send(PacketDistributor.NEAR.with(() -> point), message);
+		CHANNEL.send(message, PacketDistributor.NEAR.with(point));
 	}
 
 	public static void sendToAllTrackingEntity(IPacket message, ServerPlayer player) {
-		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), message);
+		CHANNEL.send(message, PacketDistributor.TRACKING_ENTITY.with(player));
 	}
 
 	public static void sendToAllTrackingEntityAndSelf(IPacket message, ServerPlayer player) {
-		CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), message);
+		CHANNEL.send(message, PacketDistributor.TRACKING_ENTITY_AND_SELF.with(player));
 	}
 
 	public static void sendToAllTrackingChunk(IPacket message, LevelChunk chunk) {
-		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
+		CHANNEL.send(message, PacketDistributor.TRACKING_CHUNK.with(chunk));
 	}
 
 	public static void sendToAllInDimension(IPacket message, ResourceKey<Level> dimension) {
-		CHANNEL.send(PacketDistributor.DIMENSION.with(() -> dimension), message);
+		CHANNEL.send(message, PacketDistributor.DIMENSION.with(dimension));
 	}
 
 	public static void sendToServer(IPacket message) {
-		CHANNEL.sendToServer(message);
+		CHANNEL.send(message, PacketDistributor.SERVER.noArg());
 	}
 }

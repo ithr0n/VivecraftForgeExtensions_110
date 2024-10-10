@@ -1,10 +1,7 @@
 package com.techjar.vivecraftforge.network;
 
-import java.util.function.Supplier;
-
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class Message<T extends IPacket> {
 	private final Class<T> tClass;
@@ -24,7 +21,8 @@ public class Message<T extends IPacket> {
 	public final T decode(FriendlyByteBuf buffer) {
 		T packet;
 		try {
-			packet = tClass.newInstance();
+			//packet = tClass.newInstance();
+			packet = tClass.getDeclaredConstructor().newInstance();
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException("instantiating packet", e);
 		}
@@ -33,11 +31,11 @@ public class Message<T extends IPacket> {
 		return packet;
 	}
 
-	public final void handle(T packet, Supplier<NetworkEvent.Context> context) {
-		if (context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER)
+	public final void handle(T packet, CustomPayloadEvent.Context context) {
+		if (context.isServerSide())
 			packet.handleServer(context);
 		else
 			packet.handleClient(context);
-		context.get().setPacketHandled(true);
+		context.setPacketHandled(true);
 	}
 }
